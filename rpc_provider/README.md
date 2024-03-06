@@ -18,14 +18,19 @@ yarn add @polkadot/rpc-provider
 
 WebSocket Initialization -
 
-```javascript
-import { WsProvider } from "@polkadot/rpc-provider";
+```rust
+use rpc_provider::{defaults::WS_URL, jsonrpsee::JsonrpseeClient, rpc_params, Request};
+use sp_core::H256;
+use types_support::metadata::v15::polkadot_rpc::PolkadotRpcMethod;
 
-// this is the actual default endpoint
-const provider = new WsProvider("ws://127.0.0.1:9944");
-const version = await provider.send("client_version", []);
+#[tokio::main]
+async fn main() {
+	let client = JsonrpseeClient::new(WS_URL).await.unwrap();
+	let method = PolkadotRpcMethod::ChainGetBlockHash.as_string();
+	let output = client.request::<H256>(&method, rpc_params!(Some(0))).await.unwrap();
 
-console.log("client version", version);
+	println!("Blockhas: {output:?}");
+}
 ```
 
 HTTP Initialization -
