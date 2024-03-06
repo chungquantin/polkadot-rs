@@ -1,1 +1,13 @@
-workspace.members = ["./rpc_provider/"]
+[package]
+name = "polkadot-rs"
+version = "0.17.0"
+authors = ["OpenGuild Labs"]
+license = "Apache-2.0"
+edition = "2021"
+repository = "https://github.com/openguild-labs/polkadot-rs"
+readme = "README.md"
+keywords = ["json", "rpc"]
+categories = ["no-std", "wasm"]
+
+[workspace]
+members = [".", "api", "rpc_provider", "types_support", "examples/polkadot"]

@@ -13,16 +13,16 @@ jsonrpsee-client = ["std", "jsonrpsee"]
 std = ["serde/std", "serde_json/std", "url"]
 
 [dependencies]
-sp-core = { default-features = false, features = [
- "full_crypto",
- "serde",
-], git = "https://github.com/paritytech/polkadot-sdk.git", branch = "master" }
 serde = { version = "1.0.136", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0.79", default-features = false }
 tokio = { version = "1.36.0", features = ["full"] }
 maybe-async = { version = "0.2.7" }
 async-trait = "0.1.68"
 
+sp-core = { default-features = false, features = [
+ "full_crypto",
+ "serde",
+], git = "https://github.com/paritytech/polkadot-sdk.git", branch = "master" }
 # websocket dependent features
 jsonrpsee = { version = "0.22", optional = true, features = [
  "async-client",
