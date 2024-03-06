@@ -3,13 +3,32 @@ name = "rpc_provider"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+default = ["std", "jsonrpsee-client"]
+# Use the `jsonrpsee` crate for websocket communication. Does only provide async support and needs a tokio runtime.
+# Provides convenience functions such as subscription callbacks.
+# Most examples use the `jsonrpsee` feature and can be used for reference.
+jsonrpsee-client = ["std", "jsonrpsee"]
+# Enables all std features of dependencies in case of std build.
+std = ["serde/std", "serde_json/std", "url"]
+
 [dependencies]
-anyhow = "1.0.80"
-either = "1.10.0"
-event-emitter-rs = "0.1.4"
-futures = "0.3.30"
-readonly = "0.2.12"
-regex = "1.10.3"
-smoldot = "0.17.0"
-thiserror = "1.0.57"
+sp-core = { default-features = false, features = [
+ "full_crypto",
+ "serde",
+], git = "https://github.com/paritytech/polkadot-sdk.git", branch = "master" }
+serde = { version = "1.0.136", default-features = false, features = ["derive"] }
+serde_json = { version = "1.0.79", default-features = false }
 tokio = { version = "1.36.0", features = ["full"] }
+maybe-async = { version = "0.2.7" }
+async-trait = "0.1.68"
+
+# websocket dependent features
+jsonrpsee = { version = "0.22", optional = true, features = [
+ "async-client",
+ "client-ws-transport-native-tls",
+ "jsonrpsee-types",
+] }
+
+# crates.io std only
+url = { version = "2.0.0", optional = true }
