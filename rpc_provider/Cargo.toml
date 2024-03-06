@@ -1,0 +1,15 @@
+[package]
+name = "rpc_provider"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.80"
+either = "1.10.0"
+event-emitter-rs = "0.1.4"
+futures = "0.3.30"
+readonly = "0.2.12"
+regex = "1.10.3"
+smoldot = "0.17.0"
+thiserror = "1.0.57"
+tokio = { version = "1.36.0", features = ["full"] }
