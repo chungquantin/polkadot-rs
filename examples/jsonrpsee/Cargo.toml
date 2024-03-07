@@ -12,4 +12,3 @@ sp-core = { default-features = false, features = [
  "full_crypto",
  "serde",
 ], git = "https://github.com/paritytech/polkadot-sdk.git", branch = "master" }
-sc-chain-spec = { default-features = false, git = "https://github.com/paritytech/polkadot-sdk.git", branch = "master" }
