@@ -13,7 +13,7 @@ async fn main() {
 	let method = PolkadotRpcMethod::SyncStateGenSyncSpec.as_string();
 	let output = client
 		.use_connection(connection)
-		.request::<ChainSpecMetadata>(&method, rpc_params!(Some(0)))
+		.request::<ChainSpecMetadata>(&method, rpc_params!(true))
 		.await
 		.unwrap();
 

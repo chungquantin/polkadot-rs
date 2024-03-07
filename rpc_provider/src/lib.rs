@@ -13,8 +13,10 @@ pub use rpc::*;
 /// Trait to be implemented by the ws-client for sending rpc requests and extrinsic.
 #[maybe_async::maybe_async(?Send)]
 pub trait Request {
-	/// Sends a RPC request to the substrate node and returns the answer as string.
+	/// Sends a RPC request to the substrate node and returns the answer as deserializable struct (see serde::de::DeserializeOwned).
 	async fn request<R: DeserializeOwned>(&self, method: &str, params: RpcParams) -> Result<R>;
+	/// Sends a RPC request to the substrate node and returns the answer as JSON string
+	async fn request_raw(&self, method: &str, params: RpcParams) -> Result<String>;
 }
 
 /// Trait to be implemented by the ws-client for subscribing to the substrate node.

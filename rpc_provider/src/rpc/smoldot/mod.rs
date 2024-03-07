@@ -1,5 +1,5 @@
 //! Reference: https://github.com/smol-dot/smoldot/blob/main/light-base/examples/basic.rs
-use crate::{primitives::RpcParams, to_json_req, Error, Request, Result};
+use crate::{error::RpcError, primitives::RpcParams, to_json_req, Error, Request, Result};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use smoldot_light::{
 	platform::{DefaultPlatform, PlatformRef},
@@ -20,7 +20,8 @@ pub struct SuccessChainConnection<P: PlatformRef> {
 pub struct JsonRpcResponse<R> {
 	id: String,
 	jsonrpc: String,
-	result: R,
+	result: Option<R>,
+	error: Option<RpcError>,
 }
 
 #[maybe_async::async_impl(?Send)]
@@ -28,12 +29,12 @@ impl<P, TChain> Request for SmoldotLightClient<Arc<P>, TChain>
 where
 	Arc<P>: PlatformRef,
 {
-	async fn request<R: DeserializeOwned>(&self, method: &str, params: RpcParams) -> Result<R> {
+	async fn request_raw(&self, method: &str, params: RpcParams) -> Result<String> {
 		let mut guarded_client = self.inner.lock().unwrap();
 		match &self._current_conn {
 			Some(SuccessChainConnection { chain_id, json_rpc_responses }) => {
 				let payload = to_json_req(method, params).unwrap();
-				println!("payload: {:?}", payload);
+
 				guarded_client
 					.json_rpc_request(payload, *chain_id)
 					.map_err(|e| Error::Client(Box::new(e)))
@@ -41,13 +42,18 @@ where
 
 				let mut guarded_responses = json_rpc_responses.lock().unwrap();
 				let next_data = guarded_responses.next().await.unwrap();
-
-				println!("next_data: {:?}", next_data);
-				let parsed_response =
-					serde_json::from_str::<JsonRpcResponse<R>>(&next_data).unwrap();
-				return Ok(parsed_response.result);
+				return Ok(next_data);
 			},
 			None => return Err(Error::ConnectionClosed),
+		}
+	}
+
+	async fn request<R: DeserializeOwned>(&self, method: &str, params: RpcParams) -> Result<R> {
+		let raw_response = self.request_raw(method, params).await.unwrap();
+		let parsed_response = serde_json::from_str::<JsonRpcResponse<R>>(&raw_response).unwrap();
+		match parsed_response.result {
+			Some(data) => return Ok(data),
+			None => return Err(Error::JsonRpcError(parsed_response.error.unwrap_or_default())),
 		}
 	}
 }

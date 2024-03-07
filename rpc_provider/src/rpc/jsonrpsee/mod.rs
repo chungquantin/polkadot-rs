@@ -86,6 +86,10 @@ impl JsonrpseeClient {
 
 #[maybe_async::async_impl(?Send)]
 impl Request for JsonrpseeClient {
+	async fn request_raw(&self, method: &str, params: RpcParams) -> Result<String> {
+		self.request::<String>(method, params).await
+	}
+
 	async fn request<R: DeserializeOwned>(&self, method: &str, params: RpcParams) -> Result<R> {
 		self.inner
 			.request(method, RpcParamsWrapper(params))

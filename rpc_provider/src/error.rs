@@ -2,8 +2,21 @@ use core::fmt::Debug;
 
 pub type Result<T> = core::result::Result<T, Error>;
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct RpcError {
+	code: String,
+	message: String,
+}
+
+impl Default for RpcError {
+	fn default() -> Self {
+		return Self { code: "undefined".to_string(), message: "No matched rpc error".to_string() };
+	}
+}
+
 #[derive(Debug)]
 pub enum Error {
+	JsonRpcError(RpcError),
 	SerdeJson(serde_json::error::Error),
 	ExtrinsicFailed(String),
 	MpscSend(String),
@@ -22,6 +35,7 @@ impl From<serde_json::error::Error> for Error {
 	}
 }
 
+use serde::{Deserialize, Serialize};
 #[cfg(feature = "std")]
 #[allow(unused_imports)]
 pub use std_only::*;
