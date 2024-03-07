@@ -8,6 +8,7 @@ pub enum Error {
 	ExtrinsicFailed(String),
 	MpscSend(String),
 	InvalidUrl(String),
+	InvalidChainSpec(String),
 	RecvError(String),
 	Io(String),
 	MaxConnectionAttemptsExceeded,

@@ -1,0 +1,15 @@
+[package]
+name = "examples-jsonrpsee"
+version = "0.1.0"
+license = "Apache-2.0"
+edition = "2021"
+
+[dev-dependencies]
+tokio = { version = "1.36.0", features = ["full"] }
+rpc_provider = { path = "../../rpc_provider" }
+types_support = { path = "../../types_support" }
+sp-core = { default-features = false, features = [
+ "full_crypto",
+ "serde",
+], git = "https://github.com/paritytech/polkadot-sdk.git", branch = "master" }
+sc-chain-spec = { default-features = false, git = "https://github.com/paritytech/polkadot-sdk.git", branch = "master" }

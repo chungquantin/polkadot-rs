@@ -10,4 +10,13 @@ keywords = ["json", "rpc"]
 categories = ["no-std", "wasm"]
 
 [workspace]
-members = [".", "api", "rpc_provider", "types_support", "examples/polkadot"]
+members = [
+ ".",
+ "api",
+ "rpc_provider",
+ "types_support",
+ "examples/jsonrpsee",
+ "examples/smoldot",
+]
+
+[dependencies]

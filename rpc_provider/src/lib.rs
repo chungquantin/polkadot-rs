@@ -3,11 +3,12 @@ use serde::de::DeserializeOwned;
 
 pub mod defaults;
 pub mod error;
-pub mod jsonrpsee;
 pub mod mac;
 pub mod primitives;
-
+pub mod rpc;
 pub use error::{Error, Result};
+
+pub use rpc::*;
 
 /// Trait to be implemented by the ws-client for sending rpc requests and extrinsic.
 #[maybe_async::maybe_async(?Send)]
@@ -54,7 +55,7 @@ pub fn to_json_req(method: &str, params: RpcParams) -> Result<String> {
 mod tests {
 	use sp_core::H256;
 
-	use crate::{defaults::WS_URL, jsonrpsee::JsonrpseeClient, rpc_params, Request};
+	use crate::{defaults::WS_URL, rpc::jsonrpsee::JsonrpseeClient, rpc_params, Request};
 
 	#[tokio::test]
 	async fn it_works() {
