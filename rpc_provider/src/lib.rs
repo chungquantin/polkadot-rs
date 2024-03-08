@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use primitives::RpcParams;
 use serde::de::DeserializeOwned;
 
@@ -14,7 +16,11 @@ pub use rpc::*;
 #[maybe_async::maybe_async(?Send)]
 pub trait Request {
 	/// Sends a RPC request to the substrate node and returns the answer as deserializable struct (see serde::de::DeserializeOwned).
-	async fn request<R: DeserializeOwned>(&self, method: &str, params: RpcParams) -> Result<R>;
+	async fn request<R: DeserializeOwned + Debug>(
+		&self,
+		method: &str,
+		params: RpcParams,
+	) -> Result<R>;
 	/// Sends a RPC request to the substrate node and returns the answer as JSON string
 	async fn request_raw(&self, method: &str, params: RpcParams) -> Result<String>;
 }

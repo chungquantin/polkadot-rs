@@ -6,6 +6,7 @@ use smoldot_light::{
 	AddChainSuccess, ChainId, JsonRpcResponses,
 };
 use std::{
+	fmt::Debug,
 	num::NonZeroU32,
 	sync::{Arc, Mutex},
 };
@@ -16,8 +17,11 @@ pub struct SuccessChainConnection<P: PlatformRef> {
 	json_rpc_responses: Arc<Mutex<JsonRpcResponses<P>>>,
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct JsonRpcResponse<R> {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct JsonRpcResponse<R>
+where
+	R: Debug,
+{
 	id: String,
 	jsonrpc: String,
 	result: Option<R>,
@@ -48,7 +52,11 @@ where
 		}
 	}
 
-	async fn request<R: DeserializeOwned>(&self, method: &str, params: RpcParams) -> Result<R> {
+	async fn request<R: DeserializeOwned + Debug>(
+		&self,
+		method: &str,
+		params: RpcParams,
+	) -> Result<R> {
 		let raw_response = self.request_raw(method, params).await.unwrap();
 		let parsed_response = serde_json::from_str::<JsonRpcResponse<R>>(&raw_response).unwrap();
 		match parsed_response.result {

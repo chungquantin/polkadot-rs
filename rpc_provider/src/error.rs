@@ -4,13 +4,13 @@ pub type Result<T> = core::result::Result<T, Error>;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RpcError {
-	code: String,
+	code: i128,
 	message: String,
 }
 
 impl Default for RpcError {
 	fn default() -> Self {
-		return Self { code: "undefined".to_string(), message: "No matched rpc error".to_string() };
+		return Self { code: i128::default(), message: "No matched rpc error".to_string() };
 	}
 }
 
