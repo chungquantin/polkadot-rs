@@ -16,8 +16,8 @@ members = [
  "rpc_provider",
  "rpc_core",
  "types_support",
- "examples/jsonrpsee",
- "examples/smoldot",
+ "examples/rpc",
 ]
 
 [dependencies]
+jsonrpsee-http-client = "0.22.2"
