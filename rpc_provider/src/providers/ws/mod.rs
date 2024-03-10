@@ -1,15 +1,13 @@
 use crate::{
-	defaults::WS_URL, types::ProviderInterface, Error, Request, Result, RpcParams, Subscribe,
+	defaults::WS_URL,
+	types::{ProviderInterface, RpcParamsWrapper},
+	Error, Request, Result, RpcParams, Subscribe,
 };
 use jsonrpsee::{
 	client_transport::ws::{Url, WsTransportClientBuilder},
-	core::{
-		client::{Client, ClientBuilder, ClientT, Error as JsonrpseeError, SubscriptionClientT},
-		traits::ToRpcParams,
-	},
+	core::client::{Client, ClientBuilder, ClientT, Error as JsonrpseeError, SubscriptionClientT},
 };
 use serde::de::DeserializeOwned;
-use serde_json::value::RawValue;
 use std::sync::Arc;
 use subscription::SubscriptionWrapper;
 
@@ -132,17 +130,5 @@ impl Subscribe for WsProvider {
 			.await
 			.map(|sub| sub.into())
 			.map_err(|e| Error::Client(Box::new(e)))
-	}
-}
-
-struct RpcParamsWrapper(RpcParams);
-
-impl ToRpcParams for RpcParamsWrapper {
-	fn to_rpc_params(self) -> core::result::Result<Option<Box<RawValue>>, serde_json::Error> {
-		if let Some(json) = self.0.build() {
-			RawValue::from_string(json).map(Some)
-		} else {
-			Ok(None)
-		}
 	}
 }

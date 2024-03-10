@@ -24,6 +24,7 @@ sp-core = { default-features = false, features = [
  "serde",
 ], git = "https://github.com/paritytech/polkadot-sdk.git", branch = "master" }
 # websocket dependent features
+jsonrpsee-http-client = "0.22.2"
 jsonrpsee = { version = "0.22", optional = true, features = [
  "async-client",
  "client-ws-transport-native-tls",
