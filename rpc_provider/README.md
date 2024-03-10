@@ -35,41 +35,67 @@ async fn main() {
 
 HTTP Initialization -
 
-```javascript
-import { HttpProvider } from "@polkadot/rpc-provider";
+```rust
+use rpc_provider::{
+	defaults::HTTP_URL, http::HttpProvider, rpc_params, types::ProviderInterface, Request,
+};
+use sp_core::H256;
+use types_support::metadata::v15::polkadot_rpc::PolkadotRpcMethod;
 
-// this is the actual default endpoint
-const provider = new HttpProvider("http://127.0.0.1:9933");
-const version = await provider.send("chain_getBlockHash", []);
+#[tokio::main]
+async fn main() {
+	let mut provider = HttpProvider::new(HTTP_URL).unwrap();
 
-console.log("latest block Hash", hash);
+	provider.connect().await.unwrap();
+
+	let method = PolkadotRpcMethod::ChainGetBlockHash.as_string();
+	let output = provider.request::<H256>(&method, rpc_params!(Some(0))).await.unwrap();
+
+	println!("Blockhash: {output:?}");
+}
 ```
 
-@substrate/connect Initialization -
+`smoldot` Light Client Initialization -
 
 Instantiating a Provider for the Polkadot Relay Chain:
 
 ```javascript
-import { ScProvider } from "@polkadot/rpc-provider";
-import * as Sc from "@substrate/connect";
+use rpc_provider::{light_client::ScProvider, rpc_params, Request};
+use sp_core::H256;
+use types_support::metadata::v15::polkadot_rpc::PolkadotRpcMethod;
 
-const provider = new ScProvider(Sc, Sc.WellKnownChain.polkadot);
+#[tokio::main]
+async fn main() {
+	let chain_spec = include_str!("../../../chain_spec/demo/polkadot.json");
 
-await provider.connect();
+	let provider = ScProvider::new(chain_spec, vec![]);
+	let method = PolkadotRpcMethod::ChainGetBlockHash.as_string();
+	let output = provider.request::<H256>(&method, rpc_params!(Some(0))).await.unwrap();
 
-const version = await provider.send("chain_getBlockHash", []);
+	println!("Blockhash: {output:?}");
+}
 ```
 
 Instantiating a Provider for a Polkadot parachain:
 
 ```javascript
-import { ScProvider } from "@polkadot/rpc-provider";
-import * as Sc from "@substrate/connect";
+use rpc_provider::{light_client::ScProvider, rpc_params, Request};
+use types_support::metadata::v15::polkadot_rpc::PolkadotRpcMethod;
 
-const polkadotProvider = new ScProvider(Sc, Sc.WellKnownChain.polkadot);
-const parachainProvider = new ScProvider(Sc, parachainSpec, polkadotProvider);
+#[tokio::main]
+async fn main() {
+	let method = PolkadotRpcMethod::ChainGetBlockHash.as_string();
 
-await parachainProvider.connect();
+	let relaychain_spec = include_str!("../../../chain_spec/demo/westend.json");
+	let relaychain_provider = ScProvider::new(relaychain_spec, vec![]);
 
-const version = await parachainProvider.send("chain_getBlockHash", []);
+	let output = relaychain_provider.request_raw(&method, rpc_params!(Some(0))).await.unwrap();
+	println!("Polkadot Blockhash: {output:?}");
+
+	let parachain_chainspec = include_str!("../../../chain_spec/demo/westend-westmint.json");
+	let parachain_provider = ScProvider::new(parachain_chainspec, vec![relaychain_provider.id()]);
+
+	let output = parachain_provider.request_raw(&method, rpc_params!(Some(0))).await.unwrap();
+	println!("Parachain Blockhash: {output:?}");
+}
 ```
