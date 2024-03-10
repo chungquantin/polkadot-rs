@@ -1,0 +1,8 @@
+[package]
+name = "rpc_core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rpc_provider = { path = "../rpc_provider" }
+tokio = { version = "1.36.0", features = ["full"] }

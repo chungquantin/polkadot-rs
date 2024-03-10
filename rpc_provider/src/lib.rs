@@ -7,10 +7,10 @@ pub mod defaults;
 pub mod error;
 pub mod mac;
 pub mod primitives;
-pub mod rpc;
+pub mod providers;
 pub use error::{Error, Result};
 
-pub use rpc::*;
+pub use providers::*;
 
 /// Trait to be implemented by the ws-client for sending rpc requests and extrinsic.
 #[maybe_async::maybe_async(?Send)]
@@ -57,22 +57,4 @@ pub fn to_json_req(method: &str, params: RpcParams) -> Result<String> {
 		"id": "1",
 	})
 	.to_string())
-}
-
-#[cfg(test)]
-mod tests {
-	use sp_core::H256;
-
-	use crate::{defaults::WS_URL, rpc::jsonrpsee::JsonrpseeClient, rpc_params, Request};
-
-	#[tokio::test]
-	async fn it_works() {
-		let client = JsonrpseeClient::new(WS_URL).await.unwrap();
-		assert!(client.is_connected());
-
-		let block_hash: Option<H256> =
-			client.request("chain_getBlockHash", rpc_params![Some(0)]).await.unwrap();
-
-		println!("{:?}", block_hash);
-	}
 }

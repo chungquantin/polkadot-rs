@@ -18,6 +18,6 @@ macro_rules! rpc_params {
 #[macro_export]
 macro_rules! no_params {
 	() => {
-		crate::RpcParams::default()
+		$crate::primitives::RpcParams::default()
 	};
 }

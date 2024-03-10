@@ -2102,6 +2102,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "rpc_core"
+version = "0.1.0"
+dependencies = [
+ "rpc_provider",
+ "tokio",
+]
+
+[[package]]
 name = "rpc_provider"
 version = "0.1.0"
 dependencies = [
