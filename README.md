@@ -15,15 +15,15 @@ All providers are usable (as is the API), in both browser-based and Node.js envi
 Installation -
 
 ```
-yarn add @polkadot/rpc-provider
+cargo add polkadot-rs
 ```
 
 WebSocket Initialization -
 
 ```rust
-use rpc_provider::{defaults::WS_URL, jsonrpsee::JsonrpseeClient, rpc_params, Request};
+use polkadot_rs::rpc_provider::{defaults::WS_URL, jsonrpsee::JsonrpseeClient, rpc_params, Request};
 use sp_core::H256;
-use types_support::metadata::v15::polkadot_rpc::PolkadotRpcMethod;
+use polkadot_rs::types_support::metadata::v15::polkadot_rpc::PolkadotRpcMethod;
 
 #[tokio::main]
 async fn main() {
@@ -38,11 +38,11 @@ async fn main() {
 HTTP Initialization -
 
 ```rust
-use rpc_provider::{
+use polkadot_rs::rpc_provider::{
 	defaults::HTTP_URL, http::HttpProvider, rpc_params, types::ProviderInterface, Request,
 };
 use sp_core::H256;
-use types_support::metadata::v15::polkadot_rpc::PolkadotRpcMethod;
+use polkadot_rs::types_support::metadata::v15::polkadot_rpc::PolkadotRpcMethod;
 
 #[tokio::main]
 async fn main() {
@@ -62,9 +62,9 @@ async fn main() {
 Instantiating a Provider for the Polkadot Relay Chain:
 
 ```javascript
-use rpc_provider::{light_client::ScProvider, rpc_params, Request};
+use polkadot_rs::rpc_provider::{light_client::ScProvider, rpc_params, Request};
 use sp_core::H256;
-use types_support::metadata::v15::polkadot_rpc::PolkadotRpcMethod;
+use polkadot_rs::types_support::metadata::v15::polkadot_rpc::PolkadotRpcMethod;
 
 #[tokio::main]
 async fn main() {
@@ -81,8 +81,8 @@ async fn main() {
 Instantiating a Provider for a Polkadot parachain:
 
 ```javascript
-use rpc_provider::{light_client::ScProvider, rpc_params, Request};
-use types_support::metadata::v15::polkadot_rpc::PolkadotRpcMethod;
+use polkadot_rs::rpc_provider::{light_client::ScProvider, rpc_params, Request};
+use polkadot_rs::types_support::metadata::v15::polkadot_rpc::PolkadotRpcMethod;
 
 #[tokio::main]
 async fn main() {
